@@ -1,4 +1,4 @@
 package com.whales.eplant.services.Notification;
 
-public class NotificationRegistration {
+public interface NotificationRegistration {
 }
