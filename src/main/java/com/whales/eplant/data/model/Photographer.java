@@ -19,4 +19,8 @@ public class Photographer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    private int no_Of_photographer ;
+    private boolean albumIncluded = false;
+    private boolean droneIncluded = false;
+    private String deliveryTime ;
 }
