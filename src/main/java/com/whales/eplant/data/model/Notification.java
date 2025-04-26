@@ -1,13 +1,13 @@
 package com.whales.eplant.data.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.userdetails.User;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -20,5 +20,13 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    private String message;
+    private String notificationType;
+    private boolean read;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Users recipient;
+
+    private LocalDateTime createdDate;
 }

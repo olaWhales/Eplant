@@ -12,11 +12,17 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Mc {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
+    private String languageOptions;
+    private String eventTypeSpecialist;
+    private String performanceDuration;
+    private boolean dressCodeIncluded ;
+
 }

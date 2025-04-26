@@ -1,5 +1,6 @@
 package com.whales.eplant.data.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,13 +20,23 @@ public class Vendor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
+
+//    @OneToOne(mappedBy = "vendor", cascade = CascadeType.ALL)
+//    private VendorSubscription subscription;
 
     private BigDecimal price;
     private String description;
     private BigDecimal bonus;
-    private String category;
+    private boolean availability;
     private Role role;
+
+    @Column(columnDefinition = "text")
+    private String roleAttributes;
 }

@@ -13,9 +13,17 @@ public record UserPrincipal(Users users) implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
+        // All users have the ROLE_USER authority
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        if (users.getVendor() != null) {
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + users.getVendor().getRole().name()));
+
+        // Add authorities for each vendor role the user has
+        List<Vendor> vendors = users.getVendors();
+        if (vendors != null) {
+            for (Vendor vendor : vendors) {
+                if (vendor.getRole() != null) {
+                    authorities.add(new SimpleGrantedAuthority("ROLE_" + vendor.getRole().name()));
+                }
+            }
         }
         return authorities;
     }

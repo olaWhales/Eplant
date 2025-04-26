@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
@@ -19,12 +20,18 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
-    private String description;
-    private LocalDateTime eventDate;
+    private String name;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String location;
+    private String hour;
+    private String eventType;
+    private String description;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private Users user;
+
+    @OneToMany(mappedBy = "event")
+    private List<Vendor> vendors;
 }
