@@ -25,7 +25,7 @@ public class Vendor {
 
     private BigDecimal price;
     private String description;
-    private BigDecimal bonus; // Changed to BigDecimal for consistency
+    private BigDecimal bonus;
     private String category;
     private Role role;
 }
