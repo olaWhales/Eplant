@@ -1,7 +1,6 @@
 package com.whales.eplant.controller;
 
-import com.whales.eplant.dto.request.LoginRequest.UserRegistrationRequest;
-import com.whales.eplant.services.Users.UserRegistration;
+import com.whales.eplant.dto.request.registrationRequest.UserRegistrationRequest;
 import com.whales.eplant.services.Users.UserRegistrationMethod;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

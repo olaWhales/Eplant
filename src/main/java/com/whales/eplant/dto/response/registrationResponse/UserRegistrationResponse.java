@@ -1,6 +1,6 @@
-package com.whales.eplant.dto.response.loginResponse;
+package com.whales.eplant.dto.response.registrationResponse;
 
-import com.whales.eplant.dto.request.LoginRequest.FullName;
+import com.whales.eplant.dto.request.registrationRequest.FullName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
