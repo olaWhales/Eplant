@@ -26,7 +26,6 @@ public class UserRegistrationMethod implements UserRegistration{
                 lastName(userRegistrationRequest.getLastName()).
                 email(userRegistrationRequest.getEmail()).
                 password(userRegistrationRequest.getPassword()).
-                confirmPassword(userRegistrationRequest.getConfirmPassword()).
                 build();
 
         if (!userRegistrationRequest.getPassword().equals(userRegistrationRequest.getConfirmPassword())) {

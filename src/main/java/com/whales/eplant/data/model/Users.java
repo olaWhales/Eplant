@@ -1,9 +1,6 @@
 package com.whales.eplant.data.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,7 +19,10 @@ public class Users {
 
     private String firstName;
     private String lastName;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Vendor vendor;
+
     private String email;
     private String password ;
-    private String confirmPassword;
 }

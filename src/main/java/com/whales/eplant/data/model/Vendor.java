@@ -1,10 +1,6 @@
 package com.whales.eplant.data.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jdk.jfr.Description;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,14 +14,18 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Vendor {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private Users user;
 
     private BigDecimal price;
     private String description;
-    private String Bonus ;
+    private BigDecimal bonus; // Changed to BigDecimal for consistency
     private String category;
     private Role role;
-
 }
