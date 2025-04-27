@@ -1,19 +1,16 @@
 package com.whales.eplant.data.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Entity
 @Data
-@Builder
+@Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Event {
 
     @Id
@@ -21,12 +18,12 @@ public class Event {
     private Long id;
 
     private String name;
+    private String eventType;
+    private String location;
+    private String description;
+    private Integer hour;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String location;
-    private String hour;
-    private String eventType;
-    private String description;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,4 +31,6 @@ public class Event {
 
     @OneToMany(mappedBy = "event")
     private List<Vendor> vendors;
+
+
 }
