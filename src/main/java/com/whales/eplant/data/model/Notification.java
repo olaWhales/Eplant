@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 
 import java.time.LocalDateTime;
 
@@ -22,10 +21,10 @@ public class Notification {
 
     private String message;
     private String notificationType;
-    private boolean read;
+    private boolean isRead = false ;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user")
     private Users recipient;
 
     private LocalDateTime createdDate;
