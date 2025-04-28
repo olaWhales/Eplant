@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import static com.whales.eplant.utility.Utility.*;
+
 /**
  * Service for registering events, allowing users to create events with custom start and end times.
  */
@@ -33,22 +35,21 @@ public class EventRegistrationMethod implements EventRegistration {
         // Validate authentication
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal() instanceof String) {
-            throw new IllegalArgumentException("User not authenticated");
+            throw new IllegalArgumentException(USER_NOT_AUTHENTICATED_MESSAGE);
         }
 
         // Get authenticated user
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         Users user = userPrincipal.users();
 
-        // Validation of  start and end times
+        // tIME Validation
         if (request.getStartTime() == null || request.getEndTime() == null) {
-            throw new IllegalArgumentException("Start time and end time are required");
+            throw new IllegalArgumentException(START_AND_END_TIME_REQUIRED_MESSAGE);
         }
         if (request.getEndTime().isBefore(request.getStartTime())) {
-            throw new IllegalArgumentException("End time must be after start time");
+            throw new IllegalArgumentException(START_TIME_REQUIRE_MESSAGE);
         }
 
-        // Build of event entity
         Event event = Event.builder()
                 .name(request.getName())
                 .eventType(request.getEventType())
@@ -59,15 +60,12 @@ public class EventRegistrationMethod implements EventRegistration {
                 .endTime(request.getEndTime())
                 .user(user)
                 .build();
-
-        // Save event to database
         Event savedEvent = eventRepository.save(event);
 
-        // Build response
         return EventRegistrationResponse.builder()
                 .eventId(savedEvent.getId())
-                .message("Event registered successfully")
-                .status("SUCCESS")
+                .message(EVENT_REGISTER_SUCCESSFULLY)
+                .status(SUCCESS_MESSAGE)
                 .build();
     }
 }

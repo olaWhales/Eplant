@@ -3,6 +3,7 @@ package com.whales.eplant.dto.request.event;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+@Builder
 @Schema(description = "Request payload for registering an event")
 public class EventRegistrationRequest {
     @NotBlank

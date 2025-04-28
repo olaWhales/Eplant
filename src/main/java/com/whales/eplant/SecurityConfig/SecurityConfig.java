@@ -43,6 +43,7 @@ public class SecurityConfig {
                 }))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/Users/registration", "/api/users/login").permitAll()
+                        .requestMatchers("/api/events/register").permitAll()
                         .requestMatchers("/api/events/**").hasRole("USER")
                         .requestMatchers("/api/vendors/**").hasAnyAuthority("ROLE_CATERER", "ROLE_DECORATOR", "ROLE_DJ", "ROLE_MAKE_UP", "ROLE_MC", "ROLE_PHOTOGRAPHER")
                         .anyRequest().authenticated()

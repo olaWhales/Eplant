@@ -6,5 +6,11 @@ public class Utility {
     public static final String USER_CREATED_MESSAGE = "Account created successfully";
     public static final String PASSWORD_NOT_MATCH = "Password does not match, please check your password";
     public static final String VENDOR_ALREADY_REGISTER = "User already exists";
+    public static final String START_AND_END_TIME_REQUIRED_MESSAGE = "Start time and end time are required";
+    public static final String START_TIME_REQUIRE_MESSAGE = "End time must be after start time";
+    public static final String USER_NOT_AUTHENTICATED_MESSAGE = "User not authenticated";
+    public static final String EVENT_REGISTER_SUCCESSFULLY = "Event registered successfully";
+    public static final String SUCCESS_MESSAGE = "SUCCESS";
+
 
 }

@@ -70,7 +70,7 @@ class EplantApplicationTests {
 				.build();
 
 		// Register event
-		EventRegistrationResponse response = eventRegistrationService.registerEvent(request);
+		EventRegistrationResponse response = eventRegistrationMethod.registerEvent(request);
 
 		// Verify
 		assertEquals("SUCCESS", response.getStatus());
