@@ -1,71 +1,173 @@
+//package com.whales.eplant.services.Event;
+//
+//import com.whales.eplant.data.model.Event;
+//import com.whales.eplant.data.model.Users;
+//import com.whales.eplant.data.repository.EventRepository;
+//import com.whales.eplant.data.repository.UserRepository;
+//import com.whales.eplant.dto.request.event.EventRegistrationRequest;
+//import com.whales.eplant.dto.response.event.EventRegistrationResponse;
+//import lombok.RequiredArgsConstructor;
+//import org.springframework.security.core.Authentication;
+//import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.core.userdetails.UsernameNotFoundException;
+//import org.springframework.stereotype.Service;
+//
+//import java.time.LocalDate;
+//import java.time.LocalDateTime;
+//import java.time.LocalTime;
+//import java.time.format.DateTimeFormatter;
+//import java.time.format.DateTimeParseException;
+//
+//import static com.whales.eplant.utility.Utility.USER_NOT_AUTHENTICATED_MESSAGE;
+//
+//@Service
+//@RequiredArgsConstructor
+//public class EventRegistrationMethod {
+//
+//    private final EventRepository eventRepository;
+//    private final UserRepository userRepository;
+//
+//    public EventRegistrationResponse registerEvent(EventRegistrationRequest request) {
+//
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal() instanceof String) {
+//            throw new IllegalArgumentException(USER_NOT_AUTHENTICATED_MESSAGE);
+//        }
+//
+//        // Validate input
+//        if (request.getStartTime() == null || request.getEndTime() == null) {
+//            throw new IllegalArgumentException("Start time and end time are required");
+//        }
+//
+//        try {
+//            // Parse times
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mma");
+//            LocalDate today = LocalDate.now();
+//            LocalTime startLocalTime = LocalTime.parse(request.getStartTime().toUpperCase(), formatter);
+//            LocalTime endLocalTime = LocalTime.parse(request.getEndTime().toUpperCase(), formatter);
+//
+//            LocalDateTime startTime = LocalDateTime.of(today, startLocalTime);
+//            LocalDateTime endTime = LocalDateTime.of(today, endLocalTime);
+//
+//            // Get authenticated user
+//            String username = authentication.getName(); // Email from JWT
+//            Users user = userRepository.findByEmail(username)
+//                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+//
+//            // Create event
+//            Event event = Event.builder()
+//                    .name(request.getName())
+//                    .eventType(request.getEventType())
+//                    .location(request.getLocation())
+//                    .description(request.getDescription())
+//                    .hour(request.getHour())
+//                    .startTime(startTime)
+//                    .endTime(endTime)
+//                    .user(user)
+//                    .build();
+//
+//            eventRepository.save(event);
+//
+//            return EventRegistrationResponse.builder()
+//                    .message("Event registered successfully")
+//                    .build();
+//        } catch (DateTimeParseException e) {
+//            throw new IllegalArgumentException("Invalid time format. Use hh:mma (e.g., 02:00AM)", e);
+//        }
+//    }
+//}
 package com.whales.eplant.services.Event;
 
 import com.whales.eplant.data.model.Event;
-import com.whales.eplant.data.model.UserPrincipal;
 import com.whales.eplant.data.model.Users;
 import com.whales.eplant.data.repository.EventRepository;
+import com.whales.eplant.data.repository.UserRepository;
 import com.whales.eplant.dto.request.event.EventRegistrationRequest;
 import com.whales.eplant.dto.response.event.EventRegistrationResponse;
-import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import static com.whales.eplant.utility.Utility.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.format.DateTimeParseException;
+import java.util.Locale;
 
-/**
- * Service for registering events, allowing users to create events with custom start and end times.
- */
+import static com.whales.eplant.utility.Utility.USER_NOT_AUTHENTICATED_MESSAGE;
+
 @Service
-@AllArgsConstructor
-public class EventRegistrationMethod implements EventRegistration {
+@RequiredArgsConstructor
+public class EventRegistrationMethod {
 
+    private static final Logger log = LoggerFactory.getLogger(EventRegistrationMethod.class);
     private final EventRepository eventRepository;
-    /**
-     * Registers a new event based on the provided request.
-     *
-     * @param request The event registration request containing event details.
-     * @return An EventRegistrationResponse with the registration result.
-     * @throws IllegalArgumentException if the user is not authenticated or the request is invalid.
-     */
-    @Override
-    public EventRegistrationResponse registerEvent(@Valid EventRegistrationRequest request) {
-        // Validate authentication
+    private final UserRepository userRepository;
+
+    @Transactional
+    public EventRegistrationResponse registerEvent(EventRegistrationRequest request) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal() instanceof String) {
             throw new IllegalArgumentException(USER_NOT_AUTHENTICATED_MESSAGE);
         }
+        log.info("Registering event: {}", request.getName());
 
-        // Get authenticated user
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-        Users user = userPrincipal.users();
-
-        // tIME Validation
+        // Validate input
         if (request.getStartTime() == null || request.getEndTime() == null) {
-            throw new IllegalArgumentException(START_AND_END_TIME_REQUIRED_MESSAGE);
-        }
-        if (request.getEndTime().isBefore(request.getStartTime())) {
-            throw new IllegalArgumentException(START_TIME_REQUIRE_MESSAGE);
+            throw new IllegalArgumentException("Start time and end time are required");
         }
 
-        Event event = Event.builder()
-                .name(request.getName())
-                .eventType(request.getEventType())
-                .location(request.getLocation())
-                .description(request.getDescription())
-                .hour(request.getHour())
-                .startTime(request.getStartTime())
-                .endTime(request.getEndTime())
-                .user(user)
-                .build();
-        Event savedEvent = eventRepository.save(event);
+        try {
+            // Parse times
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mma");
+            DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                    .parseCaseInsensitive()
+                    .appendPattern("hh:mma")
+                    .toFormatter(Locale.ENGLISH);
+            LocalDate today = LocalDate.now();
+            String startTimeStr = request.getStartTime().toUpperCase();
+            String endTimeStr = request.getEndTime().toUpperCase();
 
-        return EventRegistrationResponse.builder()
-                .eventId(savedEvent.getId())
-                .message(EVENT_REGISTER_SUCCESSFULLY)
-                .status(SUCCESS_MESSAGE)
-                .build();
+            LocalTime startLocalTime = LocalTime.parse(startTimeStr, formatter);
+            LocalTime endLocalTime = LocalTime.parse(endTimeStr, formatter);
+
+            LocalDateTime startTime = LocalDateTime.of(today, startLocalTime);
+            LocalDateTime endTime = LocalDateTime.of(today, endLocalTime);
+
+            // Get authenticated user
+            String username = authentication.getName();
+            log.info("Authenticated user: {}", username);
+            Users user = userRepository.findByEmailWithVendors(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+
+            // Create event
+            Event event = Event.builder()
+                    .name(request.getName())
+                    .eventType(request.getEventType())
+                    .location(request.getLocation())
+                    .description(request.getDescription())
+                    .hour(request.getHour())
+                    .startTime(startTime)
+                    .endTime(endTime)
+                    .user(user)
+                    .build();
+
+            eventRepository.save(event);
+            log.info("Event saved: {}", event.getName());
+
+            return EventRegistrationResponse.builder()
+                    .message("Event registered successfully")
+                    .build();
+        } catch (DateTimeParseException e) {
+            log.error("Invalid time format: {}", e.getMessage());
+            throw new IllegalArgumentException("Invalid time format. Use hh:mma (e.g., 02:00AM)", e);
+        }
     }
 }

@@ -35,11 +35,11 @@ public class EventRegistrationRequest {
 
     @NotNull
     @Schema(description = "Start time of the event", example = "2025-05-01T09:00:00")
-    private LocalDateTime startTime;
+    private String startTime;
 
     @NotNull
     @Schema(description = "End time of the event", example = "2025-05-01T14:00:00")
-    private LocalDateTime endTime;
+    private String endTime;
 
 
 }

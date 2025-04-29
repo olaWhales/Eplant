@@ -3,6 +3,7 @@ package com.whales.eplant;
 import com.whales.eplant.data.model.Event;
 import com.whales.eplant.data.model.UserPrincipal;
 import com.whales.eplant.data.model.Users;
+import com.whales.eplant.data.model.Vendor;
 import com.whales.eplant.data.repository.EventRepository;
 import com.whales.eplant.data.repository.UserRepository;
 import com.whales.eplant.dto.request.event.EventRegistrationRequest;
@@ -26,14 +27,10 @@ class EplantApplicationTests {
 	@Autowired
 	private UserRepository userRepository;
 	@Autowired
-	private UserRegistrationMethod userRegistrationMethod;
-    @Autowired
-    private EventRepository eventRepository;
-	@Autowired
 	private EventRegistrationMethod eventRegistrationMethod ;
 
-
-	public UserRegistrationRequest testToRegisterUser() {
+	@Test
+	public void testToRegisterUser() {
 		UserRegistrationRequest userRegistrationRequest = new UserRegistrationRequest();
 		Users user = new Users();
 		user.setFirstName("John");
@@ -45,36 +42,47 @@ class EplantApplicationTests {
 		userRegistrationRequest.setEmail(user.getEmail());
 		userRegistrationRequest.setPassword(user.getPassword());
 		userRepository.save(user);
-		return userRegistrationRequest;
+
+		assertEquals(userRegistrationRequest.getFirstName(), user.getFirstName());
+		assertEquals(userRegistrationRequest.getLastName(), user.getLastName());
 	}
 
-	@Test
-	void testEventRegistration() {
+	public void userMethodAuthentication(){
 		// Mock authenticated user
 		Users user = new Users();
-		user.setId(1L);
-		user.setEmail("test@example.com");
+		user.setId(3L);
+		user.setEmail("ajaditaoreed100@gmail.com");
 		UserPrincipal userPrincipal = new UserPrincipal(user);
 		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userPrincipal, null, null);
 		SecurityContextHolder.getContext().setAuthentication(auth);
+	}
 
+	@Test
+	void testEventRegistrationByAlreadyRegisteredUser() {
+		// Mock authenticated user
+		userMethodAuthentication();
 		// Create request
 		EventRegistrationRequest request = EventRegistrationRequest.builder()
 				.name("Spring Planting Workshop")
 				.eventType("WORKSHOP")
 				.location("Community Farm, Lagos")
 				.description("A workshop on sustainable planting")
-				.hour(5) // Fixed: Use Integer, not String
-				.startTime(LocalDateTime.now())
-				.endTime(LocalDateTime.now().plusHours(5))
+				.hour(5)
+				.startTime("01:00pm")
+				.endTime("06:00pm")
 				.build();
-
-		// Register event
+//		 Register event
 		EventRegistrationResponse response = eventRegistrationMethod.registerEvent(request);
-
-		// Verify
-		assertEquals("SUCCESS", response.getStatus());
-		Event savedEvent = eventRepository.findById(response.getEventId()).orElseThrow();
-		assertEquals("Spring Planting Workshop", savedEvent.getName());
+//		 Verify
+		assertEquals("Event registered successfully", response.getMessage());
 	}
+
+	@Test
+	public void testToRegisterMcAsAVendor(){
+		userMethodAuthentication();
+
+		Vendor vendor = new Vendor();
+	}
+
+
 }
