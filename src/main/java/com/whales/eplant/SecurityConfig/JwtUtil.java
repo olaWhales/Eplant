@@ -4,19 +4,27 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
 @Component
+@Slf4j
 public class JwtUtil {
 
-    // Use a secure key (preferably from configuration or environment)
-    private final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Generates a secure key
+    private final Key SECRET_KEY;
+
+    public JwtUtil(@Value("${jwt.secret}") String secretKey) {
+        // Decode the Base64-encoded secret key from application.properties
+        this.SECRET_KEY = Keys.hmacShaKeyFor(Base64.getDecoder().decode(secretKey));
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -50,12 +58,13 @@ public class JwtUtil {
 
     public String generateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
+        String token = createToken(claims, username);
+        log.info("Generated JWT token for user {}: {}", username, token);
+        return token;
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
-        // 10 hours
-        long EXPIRATION_TIME = 1000 * 60 * 60 * 10;
+        long EXPIRATION_TIME = 1000 * 60 * 60 * 10; // 10 hours
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)

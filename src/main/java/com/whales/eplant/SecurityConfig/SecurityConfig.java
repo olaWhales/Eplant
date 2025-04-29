@@ -3,7 +3,6 @@ package com.whales.eplant.SecurityConfig;
 import com.whales.eplant.data.repository.UserRepository;
 import com.whales.eplant.data.model.Users;
 import com.whales.eplant.data.model.UserPrincipal;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,8 +25,13 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final JwtUtil jwtUtil; // Autowire JwtUtil
+
+    public SecurityConfig(UserRepository userRepository, JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.jwtUtil = jwtUtil;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,8 +46,8 @@ public class SecurityConfig {
                     return config;
                 }))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/Users/registration", "/api/users/login").permitAll()
-                        .requestMatchers("/api/events/register").permitAll()
+                        .requestMatchers("/Users/registration", "/user/login/").permitAll()
+                        .requestMatchers("/api/events/register").authenticated()
                         .requestMatchers("/api/events/**").hasRole("USER")
                         .requestMatchers("/api/vendors/**").hasAnyAuthority("ROLE_CATERER", "ROLE_DECORATOR", "ROLE_DJ", "ROLE_MAKE_UP", "ROLE_MC", "ROLE_PHOTOGRAPHER")
                         .anyRequest().authenticated()
@@ -56,12 +60,7 @@ public class SecurityConfig {
 
     @Bean
     public JwtFilter jwtFilter() {
-        return new JwtFilter(userDetailsService(), jwtUtil());
-    }
-
-    @Bean
-    public JwtUtil jwtUtil() {
-        return new JwtUtil();
+        return new JwtFilter(userDetailsService(), jwtUtil); // Use the autowired JwtUtil
     }
 
     @Bean
@@ -76,7 +75,7 @@ public class SecurityConfig {
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
         provider.setUserDetailsService(userDetailsService());
         return provider;
     }
@@ -88,6 +87,6 @@ public class SecurityConfig {
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(12);
+        return new BCryptPasswordEncoder();
     }
 }

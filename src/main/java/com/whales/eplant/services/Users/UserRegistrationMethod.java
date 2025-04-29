@@ -6,6 +6,7 @@ import com.whales.eplant.dto.request.registrationRequest.FullName;
 import com.whales.eplant.dto.request.registrationRequest.UserRegistrationRequest;
 import com.whales.eplant.dto.response.registrationResponse.UserRegistrationResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import static com.whales.eplant.utility.Utility.*;
@@ -14,6 +15,7 @@ import static com.whales.eplant.utility.Utility.*;
 @AllArgsConstructor
 public class UserRegistrationMethod implements UserRegistration{
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder ;
 
     @Override
     public UserRegistrationResponse registerUser(UserRegistrationRequest userRegistrationRequest) {
@@ -25,7 +27,7 @@ public class UserRegistrationMethod implements UserRegistration{
                 firstName(userRegistrationRequest.getFirstName()).
                 lastName(userRegistrationRequest.getLastName()).
                 email(userRegistrationRequest.getEmail()).
-                password(userRegistrationRequest.getPassword()).
+                password(passwordEncoder.encode(userRegistrationRequest.getPassword())).
                 build();
 
         if (!userRegistrationRequest.getPassword().equals(userRegistrationRequest.getConfirmPassword())) {
