@@ -49,8 +49,8 @@ public class SecurityConfig{
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/Users/registration", "/user/login/").permitAll()
                         .requestMatchers("/api/events/register").authenticated()
-//                        .requestMatchers("/api/events/**").hasRole("USER")
-                        .requestMatchers("/api/vendors/**").hasAnyAuthority("ROLE_CATERER", "ROLE_DECORATOR", "ROLE_DJ", "ROLE_MAKE_UP", "ROLE_MC", "ROLE_PHOTOGRAPHER")
+                        .requestMatchers("/Vendor/vendor_registration/").hasRole("USER")
+//                        .requestMatchers("/api/vendors/**").hasAnyAuthority("ROLE_CATERER", "ROLE_DECORATOR", "ROLE_DJ", "ROLE_MAKE_UP", "ROLE_MC", "ROLE_PHOTOGRAPHER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

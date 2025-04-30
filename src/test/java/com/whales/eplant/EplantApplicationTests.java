@@ -7,6 +7,7 @@ import com.whales.eplant.data.repository.VendorRepository;
 import com.whales.eplant.dto.request.event.EventRegistrationRequest;
 import com.whales.eplant.dto.request.mc.McRequest;
 import com.whales.eplant.dto.request.registrationRequest.UserRegistrationRequest;
+import com.whales.eplant.dto.request.vendor.VendorRequest;
 import com.whales.eplant.dto.response.event.EventRegistrationResponse;
 import com.whales.eplant.dto.response.vendor.VendorResponse;
 import com.whales.eplant.services.Event.EventRegistrationMethod;
@@ -84,51 +85,42 @@ class EplantApplicationTests {
 	}
 
 //	@Test
-//	public void testToRegisterMcAsAVendor() {
-//		// Mock authenticated user
-//		Users user = Users.builder()
-//				.email("john.doe@example.com")
-//				.firstName("John")
-//				.lastName("Doe")
-//				.password("hashedPassword")
-//				.enabled(true)
-//				.build();
-//		userRepository.save(user);
+//	public void testToRegisterMcAsAVendor(){
+//		userMethodAuthentication();
 //
-//		// Set up authentication
-//		UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-//				user.getEmail(), null, null
-//		);
-//		SecurityContextHolder.getContext().setAuthentication(auth);
+//		Vendor vendor = new Vendor();
+//		VendorRequest request = new VendorRequest();
+//		vendor.setId(3L);
+//		vendor.setDescription("i am dj");
+//		vendor.setBonus(BigDecimal.TEN);
+//		vendor.setPrice(BigDecimal.TEN);
+//		vendor.setRole(Role.MC);
 //
-//		// Create McRequest
-//		McRequest vendorRequest = McRequest.builder()
-//				.price(BigDecimal.valueOf(100000.00))
-//				.description("Professional MC for weddings")
-//				.bonus(BigDecimal.valueOf(100.00))
-//				.availability(true)
-//				.role(Role.MC)
-//				.dressCodeIncluded(true)
-//				.languageOptions("Yoruba")
-//				.performanceDuration("5hours")
-//				.eventTypeSpecialist("all")
-//				.build();
+//		request.setBonus(BigDecimal.TEN);
+//		request.setPrice(BigDecimal.TEN);
+//		request.setDescription(vendor.getDescription());
+//		request.setRole(Role.MC);
+//		request.setDescription(vendor.getDescription());
+//		vendorRepository.save(vendor);
 //
-//		// Register vendor
-//		VendorResponse response = vendorRegistrationMethod.vendorRegistration(vendorRequest);
-//
-//		// Verify response
-//		assertEquals("Registration successful", response.getMessage());
-//
-//		// Verify vendor in database
-//		Vendor savedVendor = vendorRepository.findAll().stream()
-//				.filter(v -> v.getUser().getEmail().equals(user.getEmail()))
-//				.findFirst()
-//				.orElseThrow(() -> new AssertionError("Vendor not found"));
-//		assertEquals(Role.MC, savedVendor.getRole());
-//		assertEquals(BigDecimal.valueOf(100000.00), savedVendor.getPrice());
-//		assertEquals("Yoruba", savedVendor.getRoleAttributes().contains("Yoruba"));
-//	}
+//		Mc mc = new Mc();
+//		McRequest mcRequest = new McRequest();
+//		mc.setId(3L);
+//		mc.setEventTypeSpecialist("married");
+//		mc.setLanguageOptions("yoruba");
+//		mc.setDressCodeIncluded(true);
+//		mc.setPerformanceDuration("5");
 
+//		mcRequest.setEventTypeSpecialist(request.getRole().getMc.getEventTypeSpecialist());
+//		mcRequest.setLanguageOptions(request.getRole().getMc.getLanguageOptions());
+//		mcRequest.setPerformanceDuration(request.getRole().getMc.getPerformanceDuration());
+//		mcRequest.setLanguageOptions(request.getRole().getMc.getLanguageOptions());
+//		mcRepository.save(mc);
+//
+////		VendorResponse response = vendorRegistrationMethod.vendorRegistration(request);
+//
+//		response.setMessage("One vendor (Mc) created successfully ");
+//		assertEquals(response.getMessage(), "One vendor (Mc) created successfully ");
+//	}
 
 }

@@ -9,140 +9,150 @@ import com.whales.eplant.data.repository.UserRepository;
 import com.whales.eplant.data.repository.VendorRepository;
 import com.whales.eplant.dto.request.vendor.VendorRequest;
 import com.whales.eplant.dto.response.vendor.VendorResponse;
-import com.whales.eplant.services.Vendor.VendorRegistration;
 import com.whales.eplant.services.Vendor.VendorRegistrationMethod;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@Transactional
-class VendorServiceTest {
+@ExtendWith(MockitoExtension.class)
+class VendorRegistrationMethodTest {
 
-    @Autowired
-    private VendorRegistrationMethod vendorRegistrationMethod;
-
-    @Autowired
+    @Mock
     private UserRepository userRepository;
 
-    @Autowired
+    @Mock
     private VendorRepository vendorRepository;
-    @Autowired
-    private  McRepository mcRepository;
+
+    @Mock
+    private McRepository mcRepository;
+
+    @InjectMocks
+    private VendorRegistrationMethod vendorRegistrationMethod;
+
+    @Mock
+    private SecurityContext securityContext;
+
+    @Mock
+    private Authentication authentication;
 
     private Users user;
+    private VendorRequest request1;
+    private VendorRequest request2;
 
     @BeforeEach
     void setUp() {
-        // Create and save user
-        user = Users.builder()
-                .email("john.doe@example.com")
-                .firstName("John")
-                .lastName("Doe")
-                .password("hashedPassword")
-                .enabled(true)
-                .build();
-        userRepository.save(user);
+        // Mock the SecurityContext
+        when(authentication.getName()).thenReturn("test@example.com");
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
 
-        // Mock authentication
-        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                user.getEmail(), null, null
-        );
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        // Mock the user
+        user = new Users();
+        user.setEmail("test@example.com");
+
+        // Create VendorRequest 1 (MC with wedding attributes)
+        request1 = new VendorRequest();
+        request1.setPrice(100.00);
+        request1.setDescription("Wedding MC");
+        request1.setBonus(200.00);
+        request1.setAvailability(true);
+        request1.setRole(Role.MC);
+        Map<String, Object> roleAttributes1 = new HashMap<>();
+        roleAttributes1.put("dressCodeIncluded", true);
+        roleAttributes1.put("languageOptions", "Yoruba");
+        roleAttributes1.put("performanceDuration", "5 hours");
+        roleAttributes1.put("eventTypeSpecialist", "Weddings");
+        request1.setRoleAttributes(roleAttributes1);
+
+        // Create VendorRequest 2 (MC with corporate attributes)
+        request2 = new VendorRequest();
+        request2.setPrice(400.00);
+        request2.setDescription("Corporate MC");
+        request2.setBonus(30.00);
+        request2.setAvailability(true);
+        request2.setRole(Role.MC);
+        Map<String, Object> roleAttributes2 = new HashMap<>();
+        roleAttributes2.put("dressCodeIncluded", false);
+        roleAttributes2.put("languageOptions", "English");
+        roleAttributes2.put("performanceDuration", "3 hours");
+        roleAttributes2.put("eventTypeSpecialist", "Corporate");
+        request2.setRoleAttributes(roleAttributes2);
     }
 
-//    @ParameterizedTest
-//    @CsvSource({
-//            "MC, Professional MC for weddings, Yoruba, true, 5hours, all",
-//            "DJ, Professional DJ for events, House, false, 4hours, party"
-//    })
-//    void testRegisterVendor(String role, String description, String languageOptions, boolean dressCodeIncluded,
-//                            String performanceDuration, String eventTypeSpecialist) {
-//        // Create VendorRequest
-//        VendorRequest request = VendorRequest.builder()
-//                .price(BigDecimal.valueOf(100000.00))
-//                .description(description)
-//                .bonus(BigDecimal.valueOf(100.00))
-//                .availability(true)
-//                .role(Role.valueOf(role))
-//                .roleAttributes(Map.of(
-//                        "languageOptions", languageOptions,
-//                        "dressCodeIncluded", dressCodeIncluded,
-//                        "performanceDuration", performanceDuration,
-//                        "eventTypeSpecialist", eventTypeSpecialist
-//                ))
-//                .build();
-//
-//        // Register vendor
-//        VendorResponse response = vendorRegistrationMethod.vendorRegistration(request);
-//
-//        // Verify response
-//        assertEquals("Registration successful", response.getMessage());
-//
-//        // Verify vendor in database
-//        Vendor savedVendor = vendorRepository.findAll().stream()
-//                .filter(v -> v.getUser().getEmail().equals(user.getEmail()))
-//                .findFirst()
-//                .orElseThrow(() -> new AssertionError("Vendor not found"));
-//        assertEquals(Role.valueOf(role), savedVendor.getRole());
-//        assertEquals(BigDecimal.valueOf(100000.00), savedVendor.getPrice());
-//        assertEquals(description, savedVendor.getDescription());
-//        assertEquals(true, savedVendor.getRoleAttributes().contains(languageOptions));
-//    }
-@ParameterizedTest
-@CsvSource({
-        "MC, Professional MC for weddings, Yoruba, true, 5hours, all",
-        "DJ, Professional DJ for events, House, false, 4hours, party"
-})
-void testRegisterVendor(String role, String description, String languageOptions, boolean dressCodeIncluded,
-                        String performanceDuration, String eventTypeSpecialist) {
-    Map<String, Object> roleAttributes = role.equals("MC") ?
-            Map.of(
-                    "languageOptions", languageOptions,
-                    "dressCodeIncluded", dressCodeIncluded,
-                    "performanceDuration", performanceDuration,
-                    "eventTypeSpecialist", eventTypeSpecialist
-            ) :
-            Map.of(
-                    "musicGenres", languageOptions,
-                    "equipmentProvided", dressCodeIncluded
-            );
+    @Test
+    void testToRegisterMcAsAVendor_Success_Wedding() {
+        // Mock repository behavior
+        when(userRepository.findByEmailWithVendors("test@example.com")).thenReturn(Optional.of(user));
+        when(vendorRepository.save(any(Vendor.class))).thenAnswer(invocation -> {
+            Vendor vendor = invocation.getArgument(0);
+            vendor.setId(1L);
+            return vendor;
+        });
+        when(mcRepository.save(any(Mc.class))).thenAnswer(invocation -> {
+            Mc mc = invocation.getArgument(0);
+            mc.setId(1L);
+            return mc;
+        });
 
-    VendorRequest request = VendorRequest.builder()
-            .price(BigDecimal.valueOf(100000.00))
-            .description(description)
-            .bonus(BigDecimal.valueOf(100.00))
-            .availability(true)
-            .role(Role.valueOf(role))
-            .roleAttributes(roleAttributes)
-            .build();
+        // Call the method
+        VendorResponse response = vendorRegistrationMethod.vendorRegistration(request1);
 
-    VendorResponse response = vendorRegistrationMethod.vendorRegistration(request);
-    assertEquals("Registration successful", response.getMessage());
-
-    Vendor savedVendor = vendorRepository.findAll().stream()
-            .filter(v -> v.getUser().getEmail().equals(user.getEmail()))
-            .findFirst()
-            .orElseThrow(() -> new AssertionError("Vendor not found"));
-    assertEquals(Role.valueOf(role), savedVendor.getRole());
-
-    if (role.equals("MC")) {
-        Mc savedMc = mcRepository.findAll().stream()
-                .filter(m -> m.getVendor().getId().equals(savedVendor.getId()))
-                .findFirst()
-                .orElseThrow(() -> new AssertionError("Mc not found"));
-        assertEquals(languageOptions, savedMc.getLanguageOptions());
-        assertEquals(dressCodeIncluded, savedMc.isDressCodeIncluded());
+        // Verify
+        assertNotNull(response);
+        assertEquals("Registration successful", response.getMessage());
+        verify(userRepository).findByEmailWithVendors("test@example.com");
+        verify(vendorRepository).save(any(Vendor.class));
+        verify(mcRepository).save(argThat(mc ->
+                mc.isDressCodeIncluded() &&
+                        mc.getLanguageOptions().equals("Yoruba") &&
+                        mc.getPerformanceDuration().equals("5 hours") &&
+                        mc.getEventTypeSpecialist().equals("Weddings")
+        ));
     }
-}
+
+    @Test
+    void testToRegisterMcAsAVendor_Success_Corporate() {
+        // Mock repository behavior
+        when(userRepository.findByEmailWithVendors("test@example.com")).thenReturn(Optional.of(user));
+        when(vendorRepository.save(any(Vendor.class))).thenAnswer(invocation -> {
+            Vendor vendor = invocation.getArgument(0);
+            vendor.setId(2L);
+            return vendor;
+        });
+        when(mcRepository.save(any(Mc.class))).thenAnswer(invocation -> {
+            Mc mc = invocation.getArgument(0);
+            mc.setId(2L);
+            return mc;
+        });
+
+        // Call the method
+        VendorResponse response = vendorRegistrationMethod.vendorRegistration(request2);
+
+        // Verify
+        assertNotNull(response);
+        assertEquals("Registration successful", response.getMessage());
+        verify(userRepository).findByEmailWithVendors("test@example.com");
+        verify(vendorRepository).save(any(Vendor.class));
+        verify(mcRepository).save(argThat(mc ->
+                !mc.isDressCodeIncluded() &&
+                        mc.getLanguageOptions().equals("English") &&
+                        mc.getPerformanceDuration().equals("3 hours") &&
+                        mc.getEventTypeSpecialist().equals("Corporate")
+        ));
+    }
 }

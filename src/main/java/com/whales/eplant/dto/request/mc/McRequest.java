@@ -14,20 +14,22 @@
 package com.whales.eplant.dto.request.mc;
 
 import com.whales.eplant.data.model.Role;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-@Builder
+//@Builder
+//@AllArgsConstructor
 public class McRequest {
     // Common vendor fields
-    private BigDecimal price;
-    private String description;
-    private BigDecimal bonus;
-    private boolean availability;
-    private Role role;
+//    private BigDecimal price;
+//    private String description;
+//    private BigDecimal bonus;
+//    private boolean availability;
+//    private Role role;
 
     // MC-specific fields
     private boolean dressCodeIncluded;
