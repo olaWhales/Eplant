@@ -21,8 +21,13 @@ public class Dj {
     private long id;
     private int numberOfSpeakers;
     private int numberOfMicrophones;
+
     @ElementCollection
     private List<String> musicGenres = new ArrayList<>();
     private boolean lightingIncluded;
     private String performanceDuration;
+
+    @OneToOne
+    @JoinColumn(name = "vendor_id")
+    private Vendor vendor;
 }

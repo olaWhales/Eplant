@@ -1,5 +1,8 @@
 package com.whales.eplant.utility;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Utility {
 
     public static final String USER_ALREADY_EXISTS = "User already exists";
@@ -14,5 +17,19 @@ public class Utility {
     public static final String INVALID_CREDENTIAL = "Invalid username or password" ;
     public static final String LOGIN_SUCCESSFUL_MESSAGE ="Successful login";
 
+
+
+    @SuppressWarnings("unchecked")
+    public static List<String> safeCastStringList(Object obj) {
+        if (obj instanceof List<?> list) {
+            for (Object item : list) {
+                if (!(item instanceof String)) {
+                    throw new IllegalArgumentException("Non-String element found: " + item.getClass());
+                }
+            }
+            return (List<String>) list;
+        }
+        return new ArrayList<>();
+    }
 
 }

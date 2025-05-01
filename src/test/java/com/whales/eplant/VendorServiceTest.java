@@ -67,9 +67,9 @@ class VendorRegistrationMethodTest {
 
         // Create VendorRequest 1 (MC with wedding attributes)
         request1 = new VendorRequest();
-        request1.setPrice(100.00);
+        request1.setPrice(BigDecimal.valueOf(100.00));
         request1.setDescription("Wedding MC");
-        request1.setBonus(200.00);
+        request1.setBonus(BigDecimal.valueOf(200.00));
         request1.setAvailability(true);
         request1.setRole(Role.MC);
         Map<String, Object> roleAttributes1 = new HashMap<>();
@@ -77,13 +77,13 @@ class VendorRegistrationMethodTest {
         roleAttributes1.put("languageOptions", "Yoruba");
         roleAttributes1.put("performanceDuration", "5 hours");
         roleAttributes1.put("eventTypeSpecialist", "Weddings");
-        request1.setRoleAttributes(roleAttributes1);
+//        request1.setRoleAttributes(roleAttributes1);
 
         // Create VendorRequest 2 (MC with corporate attributes)
         request2 = new VendorRequest();
-        request2.setPrice(400.00);
+        request2.setPrice(BigDecimal.valueOf(400.00));
         request2.setDescription("Corporate MC");
-        request2.setBonus(30.00);
+        request2.setBonus(BigDecimal.valueOf(30.00));
         request2.setAvailability(true);
         request2.setRole(Role.MC);
         Map<String, Object> roleAttributes2 = new HashMap<>();
@@ -91,7 +91,7 @@ class VendorRegistrationMethodTest {
         roleAttributes2.put("languageOptions", "English");
         roleAttributes2.put("performanceDuration", "3 hours");
         roleAttributes2.put("eventTypeSpecialist", "Corporate");
-        request2.setRoleAttributes(roleAttributes2);
+//        request2.setRoleAttributes(roleAttributes2);
     }
 
     @Test

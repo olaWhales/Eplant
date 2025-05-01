@@ -1,5 +1,6 @@
 package com.whales.eplant.data.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.persistence.*;
@@ -30,10 +31,18 @@ public class Vendor {
     @JoinColumn(name = "event_id")
     private Event event;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal price;
+
     private String description;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal bonus;
+
     private boolean availability;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Role role;
 
     /**
@@ -48,7 +57,7 @@ public class Vendor {
      * Not persisted to the database; converted to/from roleAttributes JSON string.
      */
     @Transient
-    private Map<String, Object> roleAttributesMap;
+    private Map roleAttributesMap;
 
     /**
      * Converts a Map of role attributes to a JSON string for database storage.
@@ -65,9 +74,10 @@ public class Vendor {
 
     /**
      * Converts the stored JSON string to a Map for in-memory use.
+     *
      * @return Map of role-specific attributes, or null if roleAttributes is null.
      */
-    public Map<String, Object> getRoleAttributesMap() {
+    public Map getRoleAttributesMap() {
         if (roleAttributesMap == null && roleAttributes != null) {
             try {
                 roleAttributesMap = new ObjectMapper().readValue(roleAttributes, Map.class);
