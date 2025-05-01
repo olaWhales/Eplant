@@ -65,7 +65,7 @@ class EplantApplicationTests {
 	}
 
 	@Test
-	void testEventRegistrationByAlreadyRegisteredUser() {
+	void testEventRegistrationByAlreadyRegisteredAsUser() {
 		// Mock authenticated user
 		userMethodAuthentication();
 		// Create request
@@ -84,43 +84,43 @@ class EplantApplicationTests {
 		assertEquals("Event registered successfully", response.getMessage());
 	}
 
-//	@Test
-//	public void testToRegisterMcAsAVendor(){
-//		userMethodAuthentication();
-//
-//		Vendor vendor = new Vendor();
-//		VendorRequest request = new VendorRequest();
-//		vendor.setId(3L);
-//		vendor.setDescription("i am dj");
-//		vendor.setBonus(BigDecimal.TEN);
-//		vendor.setPrice(BigDecimal.TEN);
-//		vendor.setRole(Role.MC);
-//
-//		request.setBonus(BigDecimal.TEN);
-//		request.setPrice(BigDecimal.TEN);
-//		request.setDescription(vendor.getDescription());
-//		request.setRole(Role.MC);
-//		request.setDescription(vendor.getDescription());
-//		vendorRepository.save(vendor);
-//
-//		Mc mc = new Mc();
-//		McRequest mcRequest = new McRequest();
-//		mc.setId(3L);
-//		mc.setEventTypeSpecialist("married");
-//		mc.setLanguageOptions("yoruba");
-//		mc.setDressCodeIncluded(true);
-//		mc.setPerformanceDuration("5");
+	@Test
+	public void testToRegisterMcAsAVendor(){
+		userMethodAuthentication();
 
-//		mcRequest.setEventTypeSpecialist(request.getRole().getMc.getEventTypeSpecialist());
-//		mcRequest.setLanguageOptions(request.getRole().getMc.getLanguageOptions());
-//		mcRequest.setPerformanceDuration(request.getRole().getMc.getPerformanceDuration());
-//		mcRequest.setLanguageOptions(request.getRole().getMc.getLanguageOptions());
-//		mcRepository.save(mc);
-//
-////		VendorResponse response = vendorRegistrationMethod.vendorRegistration(request);
-//
-//		response.setMessage("One vendor (Mc) created successfully ");
-//		assertEquals(response.getMessage(), "One vendor (Mc) created successfully ");
-//	}
+		Vendor vendor = new Vendor();
+		vendor.setId(3L);
+		vendor.setAvailability(true);
+		vendor.setDescription("married");
+		vendor.setPrice(BigDecimal.valueOf(100.00));
+		vendor.setBonus(BigDecimal.valueOf(100.00));
+//		vendor.setRole(Role.MC);
+
+		VendorRequest vendorRequest = new VendorRequest();
+
+		vendorRequest.setAvailability(vendor.isAvailability());
+		vendorRequest.setBonus(100.00);
+		vendorRequest.setDescription(vendor.getDescription());
+//		vendorRequest.setRole(vendor.getRole());
+
+		vendorRepository.save(vendor);
+
+		if(vendor.getRole() == Role.MC){
+			Mc mc = new Mc();
+			mc.setId(3L);
+			mc.setVendor(vendor);
+			mc.setPerformanceDuration("5");
+			mc.setLanguageOptions("yoruba");
+			mc.setDressCodeIncluded(true);
+			mcRepository.save(mc);
+		}
+		vendorRequest.setRole(vendor.getRole());
+
+		VendorResponse vendorResponse = vendorRegistrationMethod.vendorRegistration(vendorRequest);
+
+		vendorResponse.setMessage("vendor registration successful");
+		assertEquals(vendorResponse.getMessage(), "vendor registration successful");
+		assertEquals(vendorRequest.getRole(), vendor.getRole());
+	}
 
 }

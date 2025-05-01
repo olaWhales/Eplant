@@ -27,7 +27,7 @@ public class Dj {
     private boolean lightingIncluded;
     private String performanceDuration;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL) // Add cascade
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
 }

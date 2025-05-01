@@ -14,7 +14,7 @@
 	<name>eplant</name>
 	<description>Event plant management</description>
 	<properties>
-		<java.version>17</java.version>
+		<java.version>23</java.version>
 	</properties>
 	<dependencies>
 		<!-- Spring Boot Starters -->
@@ -110,6 +110,9 @@
 							<version>1.18.32</version>
 						</path>
 					</annotationProcessorPaths>
+					<source>23</source>
+					<target>23</target>
+					<compilerArgs>--enable-preview</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>
