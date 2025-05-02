@@ -27,4 +27,7 @@ public class Caterer {
     private List<String> dietaryConsiderations;
     private boolean deliveryIncluded;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "vendor_id")
+    private Vendor vendor;
 }

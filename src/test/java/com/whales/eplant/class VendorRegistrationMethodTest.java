@@ -182,7 +182,7 @@ class VendorRegistrationMethodTest {
     void testEmptyRoleAttributes() {
         // Arrange
         vendorRequest.setRoleAttributes(new HashMap<>());
-        when(userRepository.findByEmailWithVendors("test@example.com")).thenReturn(Optional.of(user));
+        when(userRepository.findByEmailWithVendors("ajaditaoreed100@gmail.com")).thenReturn(Optional.of(user));
         Vendor savedVendor = Vendor.builder()
                 .id(1L)
                 .price(new BigDecimal("100.00"))
