@@ -5,7 +5,7 @@
 //
 //@Data
 //@Builder
-//public class McRequest {
+//public class McAttributes {
 //    private String languageOptions;
 //    private String eventTypeSpecialist;
 //    private String performanceDuration;
@@ -13,17 +13,12 @@
 //}
 package com.whales.eplant.dto.request.mc;
 
-import com.whales.eplant.data.model.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-
-import java.math.BigDecimal;
 
 @Data
 //@Builder
 //@AllArgsConstructor
-public class McRequest {
+public class McAttributes {
     // Common vendor fields
 //    private BigDecimal price;
 //    private String description;

@@ -24,10 +24,10 @@ public class VendorController {
 
     @PostMapping("/vendor_registration")
     public ResponseEntity<VendorResponse> vendorRegister(@Valid @RequestBody VendorRequest vendorRequest) {
-        logger.info("Received vendor registration request: role={}, description={}",
-                vendorRequest.getRole(), vendorRequest.getDescription());
-        VendorResponse response = vendorRegistrationMethod.vendorRegistration(vendorRequest);
-//        logger.info("Vendor registration successful for role: {}", vendorRequest.getRole());
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        try{
+            return new ResponseEntity<>(vendorRegistrationMethod.vendorRegistration(vendorRequest), HttpStatus.CREATED);
+        }catch(Exception e){
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

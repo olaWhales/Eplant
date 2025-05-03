@@ -1,12 +1,10 @@
 package com.whales.eplant.dto.request.caterer;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-public class CatererRegistrationRequest {
+public class CatererAttributes {
 
 }

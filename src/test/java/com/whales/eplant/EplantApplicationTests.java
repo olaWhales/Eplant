@@ -5,7 +5,6 @@ import com.whales.eplant.data.repository.McRepository;
 import com.whales.eplant.data.repository.UserRepository;
 import com.whales.eplant.data.repository.VendorRepository;
 import com.whales.eplant.dto.request.event.EventRegistrationRequest;
-import com.whales.eplant.dto.request.mc.McRequest;
 import com.whales.eplant.dto.request.registrationRequest.UserRegistrationRequest;
 import com.whales.eplant.dto.request.vendor.VendorRequest;
 import com.whales.eplant.dto.response.event.EventRegistrationResponse;
