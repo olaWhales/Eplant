@@ -1,5 +1,6 @@
 package com.whales.eplant.data.model;
 
+import com.whales.eplant.dto.request.vendor.VendorRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Decorator {
+public class Decorator extends VendorRequest {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

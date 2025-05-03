@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -116,20 +117,24 @@ public class VendorRegistrationMethod implements VendorRegistration {
             decoratorRepository.save(decorator);
         } else if (request.getRole() == Role.PHOTOGRAPHER || request.getRole() != null) {
             PhotographerAttributes photographerAttributes = request.getPhotographerAttributes();
-            Photographer photographer = Photographer.builder()
-                    .no_Of_photographer(photographerAttributes.getNo_Of_photographer())
-                    .albumIncluded(photographerAttributes.isAlbumIncluded())
-                    .droneIncluded(photographerAttributes.isDroneIncluded())
-                    .deliveryTime(photographerAttributes.getDeliveryTime())
-                    .build();
-            photographerRepository.save(photographer);
+            PhotographerDetails(photographerAttributes, new Photographer());
         }
-
 
         log.info("Vendor saved: {} ({})", vendor.getDescription(), vendor.getRole());
         return VendorResponse.builder()
                 .message("Registration successful")
                 .build();
+    }
+
+    public void PhotographerDetails(PhotographerAttributes photographerAttributes , Photographer photographer) {
+        if(photographerAttributes != null){
+            Photographer.builder()
+                    .no_Of_photographer(photographerAttributes.getNo_Of_photographer())
+                    .albumIncluded(photographerAttributes.isAlbumIncluded())
+                    .droneIncluded(photographerAttributes.isDroneIncluded())
+                    .deliveryTime(photographerAttributes.getDeliveryTime())
+                    .build();
+            photographerRepository.save(photographer);}
     }
 }
         // Always set roleAttributesMap, even if input is null or empty
