@@ -6,9 +6,13 @@ import com.whales.eplant.dto.request.dj.DjAttributes;
 import com.whales.eplant.dto.request.mc.McAttributes;
 import com.whales.eplant.dto.request.vendor.VendorRequest;
 import com.whales.eplant.dto.response.vendor.VendorResponse;
+import com.whales.eplant.services.Event.EventRegistrationMethod;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,10 +20,10 @@ import org.springframework.stereotype.Service;
 import static com.whales.eplant.utility.Utility.USER_NOT_AUTHENTICATED_MESSAGE;
 
 @Service
-@Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class VendorRegistrationMethod implements VendorRegistration {
 
+    private static final Logger log = LoggerFactory.getLogger(VendorRegistrationMethod.class);
     private final UserRepository userRepository;
     private final VendorRepository vendorRepository;
     private final McRepository mcRepository;
@@ -33,7 +37,6 @@ public class VendorRegistrationMethod implements VendorRegistration {
             throw new IllegalArgumentException(USER_NOT_AUTHENTICATED_MESSAGE);
         }
         String username = authentication.getName();
-//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("Registering vendor for user: {}", username);
 
         Users user = userRepository.findByEmailWithVendors(username)
@@ -51,6 +54,7 @@ public class VendorRegistrationMethod implements VendorRegistration {
                 .role(request.getRole())
                 .user(user)
                 .build();
+        vendorRepository.save(vendor);
 
         log.info("this is the role{}", request.getRole());
 
@@ -75,6 +79,14 @@ public class VendorRegistrationMethod implements VendorRegistration {
                     .build();
             mcRepository.save(mc);
         }
+
+
+        log.info("Vendor saved: {} ({})", vendor.getDescription(), vendor.getRole());
+        return VendorResponse.builder()
+                .message("Registration successful")
+                .build();
+    }
+}
         // Always set roleAttributesMap, even if input is null or empty
 //        Map<String, Object> roleAttributes = (request.getRoleAttributes() == null || request.getRoleAttributes().isEmpty())
 //                ? new HashMap<>()
@@ -112,10 +124,3 @@ public class VendorRegistrationMethod implements VendorRegistration {
 //        } else {
 //            vendorRepository.save(vendor);
 //        }
-
-        log.info("Vendor saved: {} ({})", vendor.getDescription(), vendor.getRole());
-        return VendorResponse.builder()
-                .message("Registration successful")
-                .build();
-    }
-}

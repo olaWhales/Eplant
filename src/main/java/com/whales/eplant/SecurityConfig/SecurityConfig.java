@@ -50,7 +50,7 @@ public class SecurityConfig{
                         .requestMatchers("/Users/registration", "/user/login/").permitAll()
                         .requestMatchers("/api/events/register").authenticated()
                         .requestMatchers("/Vendor/vendor_registration").authenticated()
-//                        .requestMatchers("/api/vendors/**").hasAnyAuthority("ROLE_CATERER", "ROLE_DECORATOR", "ROLE_DJ", "ROLE_MAKE_UP", "ROLE_MC", "ROLE_PHOTOGRAPHER")
+//                        .requestMatchers("/Vendor/vendor_registration/**").hasAnyAuthority("ROLE_CATERER", "ROLE_DECORATOR", "ROLE_DJ", "ROLE_MAKE_UP", "ROLE_MC", "ROLE_PHOTOGRAPHER")
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

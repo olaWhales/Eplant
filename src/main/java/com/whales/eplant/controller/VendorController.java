@@ -23,7 +23,7 @@ public class VendorController {
     private VendorRegistrationMethod vendorRegistrationMethod;
 
     @PostMapping("/vendor_registration")
-    public ResponseEntity<VendorResponse> vendorRegister(@Valid @RequestBody VendorRequest vendorRequest) {
+    public ResponseEntity<VendorResponse> vendorRegister(@RequestBody VendorRequest vendorRequest) {
         try{
             return new ResponseEntity<>(vendorRegistrationMethod.vendorRegistration(vendorRequest), HttpStatus.CREATED);
         }catch(Exception e){
