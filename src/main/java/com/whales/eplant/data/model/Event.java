@@ -17,7 +17,7 @@ public class Event {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    private String eventName;
     private String eventType;
     private String location;
     private String description;

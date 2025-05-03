@@ -11,11 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Schema(description = "Response object for successful user registration, containing the registered user's full name and a success message")
+@Schema(description = "Response object for successful user registration, containing the registered user's full eventName and a success message")
 public class UserRegistrationResponse {
 
     @Schema(
-            description = "The full name of the registered user, including first and last names",
+            description = "The full eventName of the registered user, including first and last names",
             implementation = FullName.class,
             required = true
     )

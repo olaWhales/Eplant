@@ -6,9 +6,7 @@ import com.whales.eplant.data.repository.UserRepository;
 import com.whales.eplant.data.repository.VendorRepository;
 import com.whales.eplant.dto.request.event.EventRegistrationRequest;
 import com.whales.eplant.dto.request.registrationRequest.UserRegistrationRequest;
-import com.whales.eplant.dto.request.vendor.VendorRequest;
 import com.whales.eplant.dto.response.event.EventRegistrationResponse;
-import com.whales.eplant.dto.response.vendor.VendorResponse;
 import com.whales.eplant.services.Event.EventRegistrationMethod;
 import com.whales.eplant.services.Vendor.VendorRegistrationMethod;
 import org.junit.jupiter.api.Test;
@@ -16,8 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -66,7 +62,7 @@ class EplantApplicationTests {
 	void testEventRegistrationByAlreadyRegisteredAsUser() {
 		userMethodAuthentication();
 		EventRegistrationRequest request = EventRegistrationRequest.builder()
-				.name("Spring Planting Workshop")
+				.eventName("Spring Planting Workshop")
 				.eventType("WORKSHOP")
 				.location("Community Farm, Lagos")
 				.description("A workshop on sustainable planting")

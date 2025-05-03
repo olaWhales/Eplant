@@ -28,7 +28,7 @@ public class UserRegistrationController {
 
     @Operation(
             summary = "Register a New User",
-            description = "Allows a new user to register by providing their first name, last name, email, password, and password confirmation."
+            description = "Allows a new user to register by providing their first eventName, last eventName, email, password, and password confirmation."
     )
     @ApiResponses({
             @ApiResponse(

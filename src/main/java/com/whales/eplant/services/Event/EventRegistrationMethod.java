@@ -50,13 +50,13 @@
 //            LocalDateTime endTime = LocalDateTime.of(today, endLocalTime);
 //
 //            // Get authenticated user
-//            String username = authentication.getName(); // Email from JWT
+//            String username = authentication.getEventName(); // Email from JWT
 //            Users user = userRepository.findByEmail(username)
 //                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 //
 //            // Create event
 //            Event event = Event.builder()
-//                    .name(request.getName())
+//                    .eventName(request.getEventName())
 //                    .eventType(request.getEventType())
 //                    .location(request.getLocation())
 //                    .description(request.getDescription())
@@ -83,6 +83,7 @@ import com.whales.eplant.data.model.Users;
 import com.whales.eplant.data.repository.EventRepository;
 import com.whales.eplant.data.repository.UserRepository;
 import com.whales.eplant.dto.request.event.EventRegistrationRequest;
+import com.whales.eplant.dto.response.VendorEventNotificationResponse;
 import com.whales.eplant.dto.response.event.EventRegistrationResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -105,7 +106,7 @@ import static com.whales.eplant.utility.Utility.USER_NOT_AUTHENTICATED_MESSAGE;
 
 @Service
 @RequiredArgsConstructor
-public class EventRegistrationMethod {
+public class EventRegistrationMethod implements EventRegistration{
 
     private static final Logger log = LoggerFactory.getLogger(EventRegistrationMethod.class);
     private final EventRepository eventRepository;
@@ -117,7 +118,7 @@ public class EventRegistrationMethod {
         if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal() instanceof String) {
             throw new IllegalArgumentException(USER_NOT_AUTHENTICATED_MESSAGE);
         }
-        log.info("Registering event: {}", request.getName());
+        log.info("Registering event: {}", request.getEventName());
 
         // Validate input
         if (request.getStartTime() == null || request.getEndTime() == null) {
@@ -149,7 +150,7 @@ public class EventRegistrationMethod {
 
             // Create event
             Event event = Event.builder()
-                    .name(request.getName())
+                    .eventName(request.getEventName())
                     .eventType(request.getEventType())
                     .location(request.getLocation())
                     .description(request.getDescription())
@@ -159,8 +160,20 @@ public class EventRegistrationMethod {
                     .user(user)
                     .build();
 
-            eventRepository.save(event);
-            log.info("Event saved: {}", event.getName());
+            Event event1 = eventRepository.save(event);
+
+//            VendorEventNotificationResponse vendorEventNotificationResponse = VendorEventNotificationResponse.builder()
+//                    .eventName(event1.getEventName())
+//                    .eventType(event1.getEventType())
+//                    .location(event1.getLocation())
+//                    .description(event1.getDescription())
+//                    .hour(event1.getHour())
+//                    .startTime(event1.getStartTime())
+//                    .endTime(event1.getEndTime())
+//                    .build();
+
+
+            log.info("Event saved: {}", event.getEventName());
 
             return EventRegistrationResponse.builder()
                     .message("Event registered successfully")

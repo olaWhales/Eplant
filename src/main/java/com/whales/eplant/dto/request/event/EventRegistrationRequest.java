@@ -4,11 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -17,7 +14,7 @@ import java.time.LocalDateTime;
 public class EventRegistrationRequest {
     @NotBlank
     @Schema(description = "Name of the event", example = "Spring Planting Workshop")
-    private String name;
+    private String eventName;
 
     @NotBlank
     @Schema(description = "Type of the event", example = "WORKSHOP")
