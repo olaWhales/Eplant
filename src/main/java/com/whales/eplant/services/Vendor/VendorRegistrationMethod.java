@@ -10,12 +10,12 @@ import com.whales.eplant.dto.request.mc.McAttributes;
 import com.whales.eplant.dto.request.photographer.PhotographerAttributes;
 import com.whales.eplant.dto.request.vendor.VendorRequest;
 import com.whales.eplant.dto.response.vendor.VendorResponse;
+import com.whales.eplant.utility.RoleAttributeUtility;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -66,58 +66,33 @@ public class VendorRegistrationMethod implements VendorRegistration {
 
         if(request.getRole() == Role.DJ || request.getDjAttributes() != null) {
             DjAttributes djAttributes = request.getDjAttributes();
-            Dj dj = Dj.builder()
-                    .performanceDuration(djAttributes.getPerformanceDuration())
-                    .numberOfMicrophones(djAttributes.getNumberOfMicrophones())
-                    .lightingIncluded(djAttributes.isLightingIncluded())
-                    .musicGenres(djAttributes.getMusicGenres())
-                    .numberOfSpeakers(djAttributes.getNumberOfSpeakers())
-                    .build();
+            Dj dj = RoleAttributeUtility.DjDetails(djAttributes , new Dj() );
             djRepository.save(dj);
+
         } else if (request.getRole() == Role.MC || request.getMcAttributes() != null) {
             McAttributes mcAttributes = request.getMcAttributes();
-            Mc mc = Mc.builder()
-                    .performanceDuration(mcAttributes.getPerformanceDuration())
-                    .dressCodeIncluded(mcAttributes.isDressCodeIncluded())
-                    .eventTypeSpecialist(mcAttributes.getEventTypeSpecialist())
-                    .languageOptions(mcAttributes.getLanguageOptions())
-                    .eventTypeSpecialist(mcAttributes.getEventTypeSpecialist())
-                    .build();
+            Mc mc = RoleAttributeUtility.McDetails(mcAttributes , new Mc());
             mcRepository.save(mc);
+
         } else if (request.getRole() == Role.CATERER || request.getCatererAttributes() != null) {
             CatererAttributes catererAttributes = request.getCatererAttributes();
-            Caterer caterer = Caterer.builder()
-                    .menuOptions(catererAttributes.getThemeOptions())
-                    .offersTasting(catererAttributes.isOfferTasting())
-                    .deliveryIncluded(catererAttributes.isDeliveryIncluded())
-                    .dietaryConsiderations(catererAttributes.getDietaryConsiderations())
-                    .numberOfMeals(catererAttributes.getNumberOfMeals())
-//                    .vendor(vendor)
-                    .build();
+            Caterer caterer = RoleAttributeUtility.CatererDetails(catererAttributes, new Caterer());
             catererRepository.save(caterer);
+
         } else if (request.getRole() == Role.MAKE_UP || request.getMakeUpAttributes() != null) {
             MakeUpAttributes makeUpAttributes = request.getMakeUpAttributes();
-            MakeUp makeUp = MakeUp.builder()
-                    .makeupStyles(makeUpAttributes.getMakeupStyles())
-                    .productsUsed(makeUpAttributes.getProductsUsed())
-                    .durationPerSession(makeUpAttributes.getDurationPerSession())
-                    .offersTrialSession(makeUpAttributes.isOffersTrialSession())
-                    .numberOfPeople(makeUpAttributes.getNumberOfPeople())
-                    .build();
+            MakeUp makeUp = RoleAttributeUtility.MakeUpDetails(makeUpAttributes, new MakeUp());
             makeUpRepository.save(makeUp);
+
         } else if (request.getRole() == Role.DECORATOR || request.getDecoratorAttributes() != null) {
             DecoratorAttributes decoratorAttributes = request.getDecoratorAttributes();
-            Decorator decorator = Decorator.builder()
-                    .customDesign(decoratorAttributes.isCustomDesign())
-                    .flowersIncluded(decoratorAttributes.isFlowersIncluded())
-                    .lightingIncluded(decoratorAttributes.isLightingIncluded())
-                    .numberOfVenues(decoratorAttributes.getNumberOfVenues())
-                    .themeOptions(decoratorAttributes.getThemeOptions())
-                    .build();
+            Decorator decorator = RoleAttributeUtility.DecoratorDetails(decoratorAttributes, new Decorator());
             decoratorRepository.save(decorator);
+
         } else if (request.getRole() == Role.PHOTOGRAPHER || request.getRole() != null) {
             PhotographerAttributes photographerAttributes = request.getPhotographerAttributes();
-            PhotographerDetails(photographerAttributes, new Photographer());
+            Photographer photographer = RoleAttributeUtility.PhotographerDetails(photographerAttributes, new Photographer());
+            photographerRepository.save(photographer);
         }
 
         log.info("Vendor saved: {} ({})", vendor.getDescription(), vendor.getRole());
@@ -125,18 +100,10 @@ public class VendorRegistrationMethod implements VendorRegistration {
                 .message("Registration successful")
                 .build();
     }
-
-    public void PhotographerDetails(PhotographerAttributes photographerAttributes , Photographer photographer) {
-        if(photographerAttributes != null){
-            Photographer.builder()
-                    .no_Of_photographer(photographerAttributes.getNo_Of_photographer())
-                    .albumIncluded(photographerAttributes.isAlbumIncluded())
-                    .droneIncluded(photographerAttributes.isDroneIncluded())
-                    .deliveryTime(photographerAttributes.getDeliveryTime())
-                    .build();
-            photographerRepository.save(photographer);}
-    }
 }
+
+
+
         // Always set roleAttributesMap, even if input is null or empty
 //        Map<String, Object> roleAttributes = (request.getRoleAttributes() == null || request.getRoleAttributes().isEmpty())
 //                ? new HashMap<>()
@@ -174,3 +141,8 @@ public class VendorRegistrationMethod implements VendorRegistration {
 //        } else {
 //            vendorRepository.save(vendor);
 //        }
+//        log.info("Vendor saved: {} ({})", vendor.getDescription(), vendor.getRole());
+//        return VendorResponse.builder()
+//                .message("Registration successful")
+//                .build();
+//}
