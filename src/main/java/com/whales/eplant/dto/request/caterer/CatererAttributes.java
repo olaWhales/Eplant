@@ -10,9 +10,10 @@ import java.util.List;
 @Builder
 public class CatererAttributes extends VendorRequest {
     private List<String> themeOptions;
-    private int numberOfVenues;
-    private boolean lightingIncluded;
-    private boolean flowersIncluded;
-    private boolean customDesign;
+    private boolean offerTasting ;
+    private boolean deliveryIncluded;
+    private List<String> dietaryConsiderations;
+    private int numberOfMeals;
+    private Long vendor ;
 
 }

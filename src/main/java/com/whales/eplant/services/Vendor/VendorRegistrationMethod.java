@@ -2,6 +2,7 @@ package com.whales.eplant.services.Vendor;
 
 import com.whales.eplant.data.model.*;
 import com.whales.eplant.data.repository.*;
+import com.whales.eplant.dto.request.caterer.CatererAttributes;
 import com.whales.eplant.dto.request.dj.DjAttributes;
 import com.whales.eplant.dto.request.mc.McAttributes;
 import com.whales.eplant.dto.request.vendor.VendorRequest;
@@ -78,6 +79,18 @@ public class VendorRegistrationMethod implements VendorRegistration {
                     .eventTypeSpecialist(mcAttributes.getEventTypeSpecialist())
                     .build();
             mcRepository.save(mc);
+        } else if (request.getRole() == Role.CATERER || request.getCatererAttributes() != null) {
+            CatererAttributes catererAttributes = request.getCatererAttributes();
+            Caterer caterer = Caterer.builder()
+                    .menuOptions(catererAttributes.getThemeOptions())
+                    .offersTasting(catererAttributes.isOfferTasting())
+                    .deliveryIncluded(catererAttributes.isDeliveryIncluded())
+                    .dietaryConsiderations(catererAttributes.getDietaryConsiderations())
+                    .numberOfMeals(catererAttributes.getNumberOfMeals())
+//                    .vendor(vendor)
+                    .build();
+            catererRepository.save(caterer);
+
         }
 
 
