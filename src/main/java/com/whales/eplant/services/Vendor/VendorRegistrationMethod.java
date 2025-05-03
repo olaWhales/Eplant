@@ -7,6 +7,7 @@ import com.whales.eplant.dto.request.decorator.DecoratorAttributes;
 import com.whales.eplant.dto.request.dj.DjAttributes;
 import com.whales.eplant.dto.request.makeUp.MakeUpAttributes;
 import com.whales.eplant.dto.request.mc.McAttributes;
+import com.whales.eplant.dto.request.photographer.PhotographerAttributes;
 import com.whales.eplant.dto.request.vendor.VendorRequest;
 import com.whales.eplant.dto.response.vendor.VendorResponse;
 import jakarta.transaction.Transactional;
@@ -32,6 +33,7 @@ public class VendorRegistrationMethod implements VendorRegistration {
     private final CatererRepository catererRepository;
     private final MakeUpRepository makeUpRepository;
     private final DecoratorRepository decoratorRepository;
+    private final PhotographerRepository photographerRepository;
 
     @Transactional
     public VendorResponse vendorRegistration(VendorRequest request) {
@@ -112,6 +114,15 @@ public class VendorRegistrationMethod implements VendorRegistration {
                     .themeOptions(decoratorAttributes.getThemeOptions())
                     .build();
             decoratorRepository.save(decorator);
+        } else if (request.getRole() == Role.PHOTOGRAPHER || request.getRole() != null) {
+            PhotographerAttributes photographerAttributes = request.getPhotographerAttributes();
+            Photographer photographer = Photographer.builder()
+                    .no_Of_photographer(photographerAttributes.getNo_Of_photographer())
+                    .albumIncluded(photographerAttributes.isAlbumIncluded())
+                    .droneIncluded(photographerAttributes.isDroneIncluded())
+                    .deliveryTime(photographerAttributes.getDeliveryTime())
+                    .build();
+            photographerRepository.save(photographer);
         }
 
 
