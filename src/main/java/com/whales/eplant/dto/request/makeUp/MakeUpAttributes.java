@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Builder
 @Schema(description = "Attributes specific to a MakeUp vendor")
-public class MakeUpAttributes extends VendorRequest {
+public class MakeUpAttributes{
     @Schema(description = "List of makeup styles offered", example = "[\"Natural\", \"Glam\"]")
     private List<String> makeupStyles;
 

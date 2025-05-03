@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @Builder
 @Schema(description = "Attributes specific to a DJ vendor")
-public class DjAttributes extends VendorRequest {
+public class DjAttributes {
     @NotNull
     @Schema(description = "Indicates if lighting is included in the DJ's service", example = "true")
     private boolean lightingIncluded;

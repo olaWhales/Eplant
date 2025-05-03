@@ -3,11 +3,13 @@ package com.whales.eplant.dto.request.mc;
 import com.whales.eplant.dto.request.vendor.VendorRequest;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 @Schema(description = "Attributes specific to an MC vendor")
-public class McAttributes extends VendorRequest {
+public class McAttributes {
     @NotNull
     @Schema(description = "Indicates if dress code attire is provided by the MC", example = "true")
     private boolean dressCodeIncluded;

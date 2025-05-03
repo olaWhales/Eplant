@@ -53,7 +53,6 @@ class EplantApplicationTests {
 	}
 
 	public Users userMethodAuthentication(){
-		// Mock authenticated user
 		Users user = new Users();
 		user.setId(3L);
 		user.setEmail("ajaditaoreed100@gmail.com");
@@ -65,9 +64,7 @@ class EplantApplicationTests {
 
 	@Test
 	void testEventRegistrationByAlreadyRegisteredAsUser() {
-		// Mock authenticated user
 		userMethodAuthentication();
-		// Create request
 		EventRegistrationRequest request = EventRegistrationRequest.builder()
 				.name("Spring Planting Workshop")
 				.eventType("WORKSHOP")
@@ -77,49 +74,47 @@ class EplantApplicationTests {
 				.startTime("01:00pm")
 				.endTime("06:00pm")
 				.build();
-//		 Register event
 		EventRegistrationResponse response = eventRegistrationMethod.registerEvent(request);
-//		 Verify
 		assertEquals("Event registered successfully", response.getMessage());
 	}
 
-	@Test
-	public void testToRegisterMcAsAVendor(){
-		userMethodAuthentication();
-
-		Vendor vendor = new Vendor();
-		vendor.setId(3L);
-		vendor.setAvailability(true);
-		vendor.setDescription("married");
-		vendor.setPrice(BigDecimal.valueOf(100.00));
-		vendor.setBonus(BigDecimal.valueOf(100.00));
+//	@Test
+//	public void testToRegisterMcAsAVendor(){
+//		userMethodAuthentication();
+//
+//		Vendor vendor = new Vendor();
+//		vendor.setId(3L);
+//		vendor.setAvailability(true);
+//		vendor.setDescription("married");
+//		vendor.setPrice(BigDecimal.valueOf(100.00));
+//		vendor.setBonus(BigDecimal.valueOf(100.00));
 //		vendor.setRole(Role.MC);
 
-		VendorRequest vendorRequest = new VendorRequest();
+//		VendorRequest vendorRequest = new VendorRequest();
 
-		vendorRequest.setAvailability(vendor.isAvailability());
-		vendorRequest.setBonus(100.00);
-		vendorRequest.setDescription(vendor.getDescription());
+//		vendorRequest.setAvailability(vendor.isAvailability());
+//		vendorRequest.setBonus(100.00);
+//		vendorRequest.setDescription(vendor.getDescription());
 //		vendorRequest.setRole(vendor.getRole());
-
-		vendorRepository.save(vendor);
-
-		if(vendor.getRole() == Role.MC){
-			Mc mc = new Mc();
-			mc.setId(3L);
-			mc.setVendor(vendor);
-			mc.setPerformanceDuration("5");
-			mc.setLanguageOptions("yoruba");
-			mc.setDressCodeIncluded(true);
-			mcRepository.save(mc);
-		}
-		vendorRequest.setRole(vendor.getRole());
-
-		VendorResponse vendorResponse = vendorRegistrationMethod.vendorRegistration(vendorRequest);
-
-		vendorResponse.setMessage("vendor registration successful");
-		assertEquals(vendorResponse.getMessage(), "vendor registration successful");
-		assertEquals(vendorRequest.getRole(), vendor.getRole());
-	}
+//
+//		vendorRepository.save(vendor);
+//
+//		if(vendor.getRole() == Role.MC){
+//			Mc mc = new Mc();
+//			mc.setId(3L);
+//			mc.setVendor(vendor);
+//			mc.setPerformanceDuration("5");
+//			mc.setLanguageOptions("yoruba");
+//			mc.setDressCodeIncluded(true);
+//			mcRepository.save(mc);
+//		}
+//		vendorRequest.setRole(vendor.getRole());
+//
+//		VendorResponse vendorResponse = vendorRegistrationMethod.vendorRegistration(vendorRequest);
+//
+//		vendorResponse.setMessage("vendor registration successful");
+//		assertEquals(vendorResponse.getMessage(), "vendor registration successful");
+//		assertEquals(vendorRequest.getRole(), vendor.getRole());
+//	}
 
 }

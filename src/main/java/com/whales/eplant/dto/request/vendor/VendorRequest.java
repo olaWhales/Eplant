@@ -9,11 +9,13 @@ import com.whales.eplant.dto.request.mc.McAttributes;
 import com.whales.eplant.dto.request.photographer.PhotographerAttributes;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
+@Builder
 @Schema(description = "Request payload for registering a vendor")
 public class VendorRequest {
     @Schema(description = "Price of the vendor's services", example = "1500.00")

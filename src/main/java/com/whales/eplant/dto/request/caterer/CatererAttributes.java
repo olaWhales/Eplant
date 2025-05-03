@@ -12,7 +12,7 @@ import java.util.List;
 @Data
 @Builder
 @Schema(description = "Attributes specific to a Caterer vendor")
-public class CatererAttributes extends VendorRequest {
+public class CatererAttributes {
 
     private List<String> menuOptions;
     private int numberOfMeals;

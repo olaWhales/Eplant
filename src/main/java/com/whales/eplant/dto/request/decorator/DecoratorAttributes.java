@@ -11,7 +11,8 @@ import java.util.List;
 @Data
 @Builder
 @Schema(description = "Attributes specific to a Decorator vendor")
-public class DecoratorAttributes extends VendorRequest {
+public class DecoratorAttributes {
+    @NotNull
     @Schema(description = "List of theme options offered by the decorator", example = "[\"Rustic\", \"Modern\"]")
     private List<String> themeOptions;
 

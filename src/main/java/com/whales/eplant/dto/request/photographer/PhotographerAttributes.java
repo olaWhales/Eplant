@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 @Builder
 @Schema(description = "Attributes specific to a Photographer vendor")
-public class PhotographerAttributes extends VendorRequest {
+public class PhotographerAttributes{
 
     @NotBlank(message = "No of photographer required")
     @Schema(description = "Number of photographers provided", example = "2")

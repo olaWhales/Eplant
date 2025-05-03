@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Decorator extends VendorRequest {
+public class Decorator {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
