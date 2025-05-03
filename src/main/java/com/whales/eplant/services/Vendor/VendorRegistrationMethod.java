@@ -4,6 +4,7 @@ import com.whales.eplant.data.model.*;
 import com.whales.eplant.data.repository.*;
 import com.whales.eplant.dto.request.caterer.CatererAttributes;
 import com.whales.eplant.dto.request.dj.DjAttributes;
+import com.whales.eplant.dto.request.makeUp.MakeUpAttributes;
 import com.whales.eplant.dto.request.mc.McAttributes;
 import com.whales.eplant.dto.request.vendor.VendorRequest;
 import com.whales.eplant.dto.response.vendor.VendorResponse;
@@ -30,6 +31,7 @@ public class VendorRegistrationMethod implements VendorRegistration {
     private final McRepository mcRepository;
     private final DjRepository djRepository;
     private final CatererRepository catererRepository;
+    private final MakeUpRepository makeUpRepository;
 
     @Transactional
     public VendorResponse vendorRegistration(VendorRequest request) {
@@ -90,6 +92,17 @@ public class VendorRegistrationMethod implements VendorRegistration {
 //                    .vendor(vendor)
                     .build();
             catererRepository.save(caterer);
+        } else if (request.getRole() == Role.MAKE_UP || request.getMakeUpAttributes() != null) {
+            MakeUpAttributes makeUpAttributes = request.getMakeUpAttributes();
+            MakeUp makeUp = MakeUp.builder()
+                    .makeupStyles(makeUpAttributes.getMakeupStyles())
+                    .productsUsed(makeUpAttributes.getProductsUsed())
+                    .durationPerSession(makeUpAttributes.getDurationPerSession())
+                    .offersTrialSession(makeUpAttributes.isOffersTrialSession())
+                    .numberOfPeople(makeUpAttributes.getNumberOfPeople())
+                    .build();
+            makeUpRepository.save(makeUp);
+        } else if (request.getRole() == Role.DECORATOR || request.getDecoratorAttributes() != null) {
 
         }
 
