@@ -2,13 +2,18 @@ package com.whales.eplant.services.Vendor;
 
 import com.whales.eplant.data.model.*;
 import com.whales.eplant.data.repository.*;
+import com.whales.eplant.dto.request.dj.DjAttributes;
+import com.whales.eplant.dto.request.mc.McAttributes;
 import com.whales.eplant.dto.request.vendor.VendorRequest;
 import com.whales.eplant.dto.response.vendor.VendorResponse;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import static com.whales.eplant.utility.Utility.USER_NOT_AUTHENTICATED_MESSAGE;
 
 @Service
 @Slf4j
@@ -23,7 +28,12 @@ public class VendorRegistrationMethod implements VendorRegistration {
 
     @Transactional
     public VendorResponse vendorRegistration(VendorRequest request) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated() || authentication.getPrincipal() instanceof String) {
+            throw new IllegalArgumentException(USER_NOT_AUTHENTICATED_MESSAGE);
+        }
+        String username = authentication.getName();
+//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         log.info("Registering vendor for user: {}", username);
 
         Users user = userRepository.findByEmailWithVendors(username)
@@ -42,31 +52,34 @@ public class VendorRegistrationMethod implements VendorRegistration {
                 .user(user)
                 .build();
 
+        log.info("this is the role{}", request.getRole());
+
+        if(request.getRole() == Role.DJ || request.getDjAttributes() != null) {
+            DjAttributes djAttributes = request.getDjAttributes();
+            Dj dj = Dj.builder()
+                    .performanceDuration(djAttributes.getPerformanceDuration())
+                    .numberOfMicrophones(djAttributes.getNumberOfMicrophones())
+                    .lightingIncluded(djAttributes.isLightingIncluded())
+                    .musicGenres(djAttributes.getMusicGenres())
+                    .numberOfSpeakers(djAttributes.getNumberOfSpeakers())
+                    .build();
+            djRepository.save(dj);
+        } else if (request.getRole() == Role.MC || request.getMcAttributes() != null) {
+            McAttributes mcAttributes = request.getMcAttributes();
+            Mc mc = Mc.builder()
+                    .performanceDuration(mcAttributes.getPerformanceDuration())
+                    .dressCodeIncluded(mcAttributes.isDressCodeIncluded())
+                    .eventTypeSpecialist(mcAttributes.getEventTypeSpecialist())
+                    .languageOptions(mcAttributes.getLanguageOptions())
+                    .eventTypeSpecialist(mcAttributes.getEventTypeSpecialist())
+                    .build();
+            mcRepository.save(mc);
+        }
         // Always set roleAttributesMap, even if input is null or empty
 //        Map<String, Object> roleAttributes = (request.getRoleAttributes() == null || request.getRoleAttributes().isEmpty())
 //                ? new HashMap<>()
 //                : request.getRoleAttributes();
 //        vendor.setRoleAttributesMap(roleAttributes);
-        if(request.getRole() == Role.DJ){
-            Dj dj = Dj.builder()
-                    .performanceDuration(request.getPerformanceDuration())
-                    .numberOfMicrophones(request.getNumberOfMicrophones())
-                    .lightingIncluded(request.isLightingIncluded())
-                    .musicGenres(request.getMusicGenres())
-                    .numberOfSpeakers(request.getNumberOfSpeakers())
-                    .build();
-            djRepository.save(dj);
-        } else if (request.getRole() == Role.MC) {
-            Mc mc = Mc.builder()
-                    .performanceDuration(request.getPerformanceDuration())
-                    .dressCodeIncluded(request.isDressCodeIncluded())
-                    .eventTypeSpecialist(request.getEventTypeSpecialist())
-                    .languageOptions(request.getLanguageOptions())
-                    .eventTypeSpecialist(request.getEventTypeSpecialist())
-                    .build();
-            mcRepository.save(mc);
-        }
-
 //        if (request.getRole() == Role.MC) {
 //            Mc mc = Mc.builder()
 //                    .dressCodeIncluded((Boolean) roleAttributes.getOrDefault("dressCodeIncluded", false))

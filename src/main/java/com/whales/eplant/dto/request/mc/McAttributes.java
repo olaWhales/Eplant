@@ -13,12 +13,13 @@
 //}
 package com.whales.eplant.dto.request.mc;
 
+import com.whales.eplant.dto.request.vendor.VendorRequest;
 import lombok.Data;
 
 @Data
 //@Builder
 //@AllArgsConstructor
-public class McAttributes {
+public class McAttributes extends VendorRequest {
     // Common vendor fields
 //    private BigDecimal price;
 //    private String description;
