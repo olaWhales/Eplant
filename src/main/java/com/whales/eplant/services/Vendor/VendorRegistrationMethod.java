@@ -3,14 +3,13 @@ package com.whales.eplant.services.Vendor;
 import com.whales.eplant.data.model.*;
 import com.whales.eplant.data.repository.*;
 import com.whales.eplant.dto.request.caterer.CatererAttributes;
+import com.whales.eplant.dto.request.decorator.DecoratorAttributes;
 import com.whales.eplant.dto.request.dj.DjAttributes;
 import com.whales.eplant.dto.request.makeUp.MakeUpAttributes;
 import com.whales.eplant.dto.request.mc.McAttributes;
 import com.whales.eplant.dto.request.vendor.VendorRequest;
 import com.whales.eplant.dto.response.vendor.VendorResponse;
-import com.whales.eplant.services.Event.EventRegistrationMethod;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -32,6 +31,7 @@ public class VendorRegistrationMethod implements VendorRegistration {
     private final DjRepository djRepository;
     private final CatererRepository catererRepository;
     private final MakeUpRepository makeUpRepository;
+    private final DecoratorRepository decoratorRepository;
 
     @Transactional
     public VendorResponse vendorRegistration(VendorRequest request) {
@@ -103,7 +103,15 @@ public class VendorRegistrationMethod implements VendorRegistration {
                     .build();
             makeUpRepository.save(makeUp);
         } else if (request.getRole() == Role.DECORATOR || request.getDecoratorAttributes() != null) {
-
+            DecoratorAttributes decoratorAttributes = request.getDecoratorAttributes();
+            Decorator decorator = Decorator.builder()
+                    .customDesign(decoratorAttributes.isCustomDesign())
+                    .flowersIncluded(decoratorAttributes.isFlowersIncluded())
+                    .lightingIncluded(decoratorAttributes.isLightingIncluded())
+                    .numberOfVenues(decoratorAttributes.getNumberOfVenues())
+                    .themeOptions(decoratorAttributes.getThemeOptions())
+                    .build();
+            decoratorRepository.save(decorator);
         }
 
 
