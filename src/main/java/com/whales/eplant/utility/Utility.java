@@ -16,6 +16,7 @@ public class Utility {
     public static final String SUCCESS_MESSAGE = "SUCCESS";
     public static final String INVALID_CREDENTIAL = "Invalid username or password" ;
     public static final String LOGIN_SUCCESSFUL_MESSAGE ="Successful login";
+    public static final String USER_NOT_FOUND_MESSAGE ="User not found: ";
 
 
 
